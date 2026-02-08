@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Reset root to ensure full height */
+:root,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevents double scrollbars */
+  background-color: #121212; /* Matches dark theme to prevent white flash */
+}
