@@ -2,7 +2,8 @@ import React from "react";
 
 const Branding = () => {
   return (
-    <div className="absolute bottom-3 right-3 z-50 pointer-events-auto">
+    // Moved up (bottom-16) and left (right-16) to avoid overlapping default UI
+    <div className="absolute bottom-16 right-16 z-50 pointer-events-auto">
       <div className="flex items-center gap-2 px-3 py-2 bg-white/5 dark:bg-black/20 backdrop-blur-md border border-neutral-200/20 dark:border-neutral-800/50 rounded-lg shadow-sm transition-all hover:shadow-md hover:bg-white/10 dark:hover:bg-black/40">
         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
         <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-medium">

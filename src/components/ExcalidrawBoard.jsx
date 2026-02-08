@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Excalidraw } from "@excalidraw/excalidraw";
+import { Excalidraw, WelcomeScreen } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
 import Branding from "./Branding";
-import Loading from "./Loading";
 
 // --- Configuration ---
 const STORAGE_KEY = "neurootix-whiteboard-data";
 const SAVE_DEBOUNCE_MS = 500;
 
-// --- Utility: Debounce Function (prevents excessive writes) ---
+// --- Utility: Debounce Function ---
 const debounce = (func, wait) => {
   let timeout;
   return (...args) => {
@@ -22,7 +21,7 @@ const ExcalidrawBoard = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const excalidrawAPIRef = useRef(null);
 
-  // 1. Load Data from LocalStorage on Mount
+  // 1. Load Data
   useEffect(() => {
     try {
       const savedData = localStorage.getItem(STORAGE_KEY);
@@ -41,8 +40,7 @@ const ExcalidrawBoard = () => {
     }
   }, []);
 
-  // 2. Persist Data (Auto-Save)
-  // We use useCallback to create a stable function reference
+  // 2. Auto-Save
   const handleChange = useCallback(
     debounce((elements, appState, files) => {
       try {
@@ -61,27 +59,47 @@ const ExcalidrawBoard = () => {
     [],
   );
 
-  if (!isLoaded) return <Loading />;
+  if (!isLoaded) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-neutral-950 text-emerald-500 font-mono">
+        LOADING SYSTEM...
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen w-screen relative overflow-hidden bg-[#121212]">
-      {/* Wrapper ensures exact sizing */}
-      <div className="absolute inset-0 z-0">
+      {/* Excalidraw Container */}
+      <div className="absolute inset-0 z-0 custom-excalidraw-styles">
         <Excalidraw
           excalidrawAPI={(api) => (excalidrawAPIRef.current = api)}
           initialData={initialData}
           onChange={handleChange}
-          theme="dark" // Sets default theme to dark
+          theme="dark"
           UIOptions={{
             canvasActions: {
               loadScene: true,
               saveToActiveFile: true,
               toggleTheme: true,
-              // FIX: We do NOT pass 'export: true' here to avoid the crash.
-              // Excalidraw handles the default export behavior automatically.
+              export: { saveFileToDisk: true },
             },
           }}
-        />
+        >
+          {/* Native Welcome Screen (Only shows when canvas is empty) */}
+          <WelcomeScreen>
+            <WelcomeScreen.Hints.MenuHint />
+            <WelcomeScreen.Hints.ToolbarHint />
+            <WelcomeScreen.Center>
+              <WelcomeScreen.Center.Heading>
+                Start Your Diagram
+              </WelcomeScreen.Center.Heading>
+              <WelcomeScreen.Center.Menu>
+                <WelcomeScreen.Center.MenuItemLoadScene />
+                <WelcomeScreen.Center.MenuItemHelp />
+              </WelcomeScreen.Center.Menu>
+            </WelcomeScreen.Center>
+          </WelcomeScreen>
+        </Excalidraw>
       </div>
 
       <Branding />

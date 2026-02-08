@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Reset root to ensure full height */
 :root,
 body,
 #root {
@@ -8,6 +7,12 @@ body,
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevents double scrollbars */
-  background-color: #121212; /* Matches dark theme to prevent white flash */
+  overflow: hidden;
+  background-color: #121212;
+}
+
+/* Slightly larger UI for the board */
+.custom-excalidraw-styles .excalidraw {
+  --ui-font: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem; /* Increases UI element size slightly */
 }
